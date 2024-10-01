@@ -1,8 +1,8 @@
-OPENSCAD=/Applications/OpenSCAD.app/Contents/MacOS/OpenSCAD
+OPENSCAD=openscad
 CONVERT=convert
 SNAPPYVER="v3.0"
 PARTFILES=$(sort $(wildcard *_parts.scad))
-TARGETS=$(patsubst %.scad,STLs/%.stl,${PARTFILES})
+TARGETS=$(patsubst %.scad,3MFs/%.3mf,${PARTFILES})
 ROTFILES=$(shell seq -f 'wiki/${SNAPPYVER}-snappy_rot%03g.png' 0 10 359.99)
 ASM_MODULES=$(shell grep 'module [a-z0-9_]*_assembly' full_assembly.scad | sed 's/^module //' | sed 's/[^a-z0-9_].*$$//' | sed '1!G;h;$$!d')
 ASM_BEFORE_TARGETS=$(patsubst %,docs/assembly/%_before.png,${ASM_MODULES})
@@ -10,10 +10,9 @@ ASM_AFTER_TARGETS=$(patsubst %,docs/assembly/%_after.png,${ASM_MODULES})
 
 all: ${TARGETS}
 
-STLs/%.stl: %.scad config.scad GDMUtils.scad
+3MFs/%.3mf: %.scad config.scad GDMUtils.scad
 	@if grep -q '^\s*!' $< ; then echo "Found uncommented exclamation mark(s) in source." ; grep -Hn '^\s*!' $< ; false ; fi
 	${OPENSCAD} -m make -o $@ $<
-	./stl_normalize.py -c $@ -o $@
 
 pull:
 	git pull --recurse-submodules
@@ -89,35 +88,33 @@ rendering: wiki/${SNAPPYVER}-snappy_full.png wiki/${SNAPPYVER}-snappy_small.png
 animation: wiki/${SNAPPYVER}-snappy_animated.gif wiki/${SNAPPYVER}-snappy_anim_small.gif
 wiki: rendering renderparts animation
 
-
-
 # Dependencies follow.
-STLs/cable_chain_link_parts.stl: joiners.scad
-STLs/cable_chain_mount_parts.stl: joiners.scad
-STLs/cooling_fan_shroud_parts.stl: joiners.scad
-STLs/drive_gear_parts.stl: publicDomainGearV1.1.scad
-STLs/extruder_fan_clip_parts.stl: joiners.scad
-STLs/extruder_fan_shroud_parts.stl: joiners.scad
-STLs/extruder_idler_parts.stl: joiners.scad
-STLs/extruder_motor_clip_parts.stl: joiners.scad
-STLs/jhead_platform_parts.stl: joiners.scad
-STLs/lifter_screw_parts.stl: joiners.scad
-STLs/motor_mount_plate_parts.stl: joiners.scad NEMA.scad
-STLs/platform_support_parts.stl: joiners.scad
-STLs/rail_endcap_parts.stl: joiners.scad
-STLs/rail_segment_parts.stl: joiners.scad sliders.scad
-STLs/rail_xy_motor_segment_parts.stl: joiners.scad sliders.scad
-STLs/rail_z_motor_segment_parts.stl: joiners.scad
-STLs/rambo_mount_parts.stl: joiners.scad
-STLs/ramps_mount_parts.stl: joiners.scad
-STLs/sled_endcap_parts.stl: joiners.scad
-STLs/slop_calibrator_parts.stl: joiners.scad
-STLs/spool_holder_parts.stl: joiners.scad
-STLs/support_leg_parts.stl: joiners.scad
-STLs/xy_joiner_parts.stl: joiners.scad
-STLs/xy_sled_parts.stl: joiners.scad publicDomainGearV1.1.scad sliders.scad
-STLs/yz_joiner_parts.stl: joiners.scad
-STLs/z_base_parts.stl: joiners.scad
-STLs/z_rail_parts.stl: joiners.scad acme_screw.scad
-STLs/z_sled_parts.stl: joiners.scad
-
+3MFs/cable_chain_link_parts.3mf: joiners.scad
+3MFs/cable_chain_mount_parts.3mf: joiners.scad
+3MFs/cooling_fan_shroud_parts.3mf: joiners.scad
+3MFs/drive_gear_parts.3mf: publicDomainGearV1.1.scad
+3MFs/extruder_fan_clip_parts.3mf: joiners.scad
+3MFs/extruder_fan_shroud_parts.3mf: joiners.scad
+3MFs/extruder_idler_parts.3mf: joiners.scad
+3MFs/extruder_motor_clip_parts.3mf: joiners.scad
+3MFs/jhead_platform_parts.3mf: joiners.scad
+3MFs/lifter_screw_parts.3mf: joiners.scad
+3MFs/motor_mount_plate_parts.3mf: joiners.scad NEMA.scad
+3MFs/platform_support_parts.3mf: joiners.scad
+3MFs/rail_endcap_parts.3mf: joiners.scad
+3MFs/rail_segment_parts.3mf: joiners.scad sliders.scad
+3MFs/rail_xy_motor_segment_parts.3mf: joiners.scad sliders.scad
+3MFs/rail_z_motor_segment_parts.3mf: joiners.scad
+3MFs/rambo_mount_parts.3mf: joiners.scad
+3MFs/ramps_mount_parts.3mf: joiners.scad
+3MFs/skr14_mount_parts.3mf: joiners.scad
+3MFs/sled_endcap_parts.3mf: joiners.scad
+3MFs/slop_calibrator_parts.3mf: joiners.scad
+3MFs/spool_holder_parts.3mf: joiners.scad
+3MFs/support_leg_parts.3mf: joiners.scad
+3MFs/xy_joiner_parts.3mf: joiners.scad
+3MFs/xy_sled_parts.3mf: joiners.scad publicDomainGearV1.1.scad sliders.scad
+3MFs/yz_joiner_parts.3mf: joiners.scad
+3MFs/z_base_parts.3mf: joiners.scad
+3MFs/z_rail_parts.3mf: joiners.scad acme_screw.scad
+3MFs/z_sled_parts.3mf: joiners.scad
